@@ -1,11 +1,17 @@
+from distutils.command.upload import upload
 from django.db import models
 
 # Create your models here.
+# class Timestampe(models.Model): #model info 
+#     uploaded_by= models.IntegerField(null=True, default='1')
+#     uploaded_at= models.DateTimeField(null=True, auto_now_add=True)
 
+#     class Meta:
+#         abstract=True
 
 class MB52(models.Model): #Model MB52
-    # uploaded_by = models.IntegerField()
-    # uploaded_at= models.TimeField()
+    uploaded_by=models.IntegerField(null=True)
+    uploaded_at=models.DateTimeField(null=True)
     material = models.CharField(max_length=30,null=True) #Numéro d'article	
     division = models.CharField(max_length=20,null=True) #Division
     store = models.CharField(max_length=10,null=True) #Magasin
@@ -23,12 +29,4 @@ class MB52(models.Model): #Model MB52
     blocked=models.FloatField(null=True) #Bloqué	
     blocked_stock_value=models.FloatField(null=True) #Val. stock bloqué	
     returns=models.FloatField(null=True) #Retours	
-    blocked_return_stock_value=models.FloatField(null=True) #Val.stk ret.bloq.
-
-
-    # def uploded_at_time(self):
-    #     return self.uploaded_at.datetime.now()
-    # def uploaded_by_user(self):
-    #     return self
-
-    
+    blocked_return_stock_value=models.FloatField(null=True) #Val.stk ret.bloq.    

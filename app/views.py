@@ -57,7 +57,15 @@ def import_file_MB52():
     #Read file
     file=r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\MB52.xlsx'
     df = pd.read_excel(file) # to read file excel
+    #insert 2 column created by, created at
+  
+    df.insert(0,'uploaded_by','1',True)
+    df.insert(1,'uploaded_at',datetime.now(),True)
+     
+    df=df.head(10)
+    print(df)
     df=df.to_csv(index=False,header=None) #To convert to csv
+    
     mb=StringIO()
     mb.write(df)
     mb.seek(0)
@@ -66,8 +74,8 @@ def import_file_MB52():
             file=mb,
             table="app_mb52",
             columns=[
-            #    'uploaded_by ',
-            #    'uploaded_at',
+              'uploaded_by',
+               'uploaded_at',
                'material',
                'division',
                'store', 
@@ -91,10 +99,3 @@ def import_file_MB52():
             sep=','
         )
     conn.commit()
-
-
-    
-
-
-    
-
