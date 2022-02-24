@@ -2,17 +2,27 @@
 from io import StringIO
 from django.shortcuts import render
 import pandas as pd
-import openpyxl 
 import psycopg2
 from datetime import datetime
 import pathlib
 import time
+from app.forms import Myform
 
 
 
 from app.models import MB52,SE16N_CEPC,SE16N_T001L,SE16N_T024,ZMM_CARNET_CDE_IS,ZRPFLG13
 
-
+def coreform(request):
+    if  (request.method == 'POST') :
+        myform = Myform(request.POST)
+        myform.save(commit=False)
+        instance=myform
+        instance.created_on='2022-02-24 00:00:00'
+        instance.created_by='1'
+        print(instance)
+        instance.save()
+        
+    return render(request,'app\corform.html',{'myform' : Myform} )
 def home(request):
     MB52.objects.all().delete()
     SE16N_CEPC.objects.all().delete()
@@ -25,17 +35,12 @@ def home(request):
 def uploaded_files():
         #connection to DB 
     conn= psycopg2.connect(host='localhost', dbname='shortagemanquant_db', user='postgres', password='sahar',port='5432')
-
+    
     file1=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\MB52.xlsx')
-
     file2=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_CEPC.xlsx')
-
     file3=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_T001L.xlsx')
-
     file4=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_T024.xlsx')
-
     file5=pathlib.Path( r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\ZMM_CARNET_CDE_IS.xlsx')
-
     file6=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\ZRPFLG13.txt')
 
     #User name
@@ -43,9 +48,9 @@ def uploaded_files():
     #Date time for upload files
     uploded_at = datetime.now()
 
-    #import_file_ZRPFLG13(conn,file6,uploded_by,uploded_at)
-    
+    #control statment to check if files exists    
     if (file1.exists() and file2.exists() and file3.exists() and file4.exists() and file5.exists() and file6.exists() ):
+    
         start=time.time()
         s1=time.time()
         import_file_MB52(conn,file1,uploded_by,uploded_at)
@@ -163,8 +168,7 @@ def import_file_MB52(con,file,username,uploaded_at):
             sep=','
         )
     con.commit()
-
-    #function for Import file SE16N_CEPC
+#function for Import file SE16N_CEPC
 def import_file_SE16N_CEPC(con,file,username,uploaded_at):
 
         #Read file
@@ -242,6 +246,7 @@ def import_file_SE16N_CEPC(con,file,username,uploaded_at):
                 sep=';'
             )
         con.commit()
+#function for Import file SE16N_T001L
 def import_file_SE16N_T001L(con,file,username,uploaded_at):
     #     #Read file
     df = pd.read_excel(file,index_col=False) # to read file excel
@@ -290,6 +295,7 @@ def import_file_SE16N_T001L(con,file,username,uploaded_at):
             sep=','
             )
     con.commit()
+#function for Import file SE16N_T024
 def import_file_SE16N_T024(con,file,username,uploaded_at):
       #Read file
     df = pd.read_excel(file) # to read file excel
@@ -325,7 +331,7 @@ def import_file_SE16N_T024(con,file,username,uploaded_at):
             sep=','
         )
     con.commit() 
-
+#function for Import file ZMM_CARNET_CDE_IS
 def import_file_ZMM_CARNET_CDE_IS(con,file,username,uploaded_at):
      #Read file
     df = pd.read_excel(file) # to read file excel
@@ -404,8 +410,7 @@ def import_file_ZMM_CARNET_CDE_IS(con,file,username,uploaded_at):
             sep='|'
         )
     con.commit() 
-
-
+#function for Import file ZRPFLG13
 def  import_file_ZRPFLG13(con,file,username,uploded_at):
   #Read file
     df = pd.read_csv(file,sep=';',encoding = "ISO-8859-1",index_col=False) # to read file excel

@@ -3,3 +3,4 @@
 psycopg2
 openpyxl
 pandas
+crispy

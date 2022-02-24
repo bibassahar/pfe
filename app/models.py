@@ -1,12 +1,8 @@
+import datetime
 from django.db import models
 
 # Create your models here.
-# class Timestampe(models.Model): #model info 
-#     uploaded_by= models.IntegerField(null=True, default='1')
-#     uploaded_at= models.DateTimeField(null=True, auto_now_add=True)
 
-#     class Meta:
-#         abstract=True
 
 class MB52(models.Model): #Model MB52
     uploaded_by=models.IntegerField(null=True)
@@ -238,3 +234,54 @@ class ZRPFLG13(models.Model): #Model ZRPFLG13
     vmi_stock = models.FloatField(null=True)              #Stock VMI		
     item_order = models.FloatField(null=True)              #Point Commande		
     planif_device = models.CharField(max_length=10,null=True) #Unité Planif	
+
+
+class Soft_delete(models.Model): #model info 
+    # uploaded_by= models.IntegerField(null=True, default='1')
+    # uploaded_at= models.DateTimeField(null=True, auto_now_add=True)
+    deleted=models.BooleanField(default=False)
+    deleted_by=models.IntegerField()
+    deleted_on=models.DateTimeField()
+    def soft_delete(self):
+        self.deleted = True
+        self.save()
+    def soft_delete(self):
+        self.deleted_on = datetime.now()
+        self.save()
+    def soft_delete(self):
+        self.deleted_by = 1
+        self.save()
+    class Meta:
+        abstract=True
+
+class SoftDeleteManager(models.Manager):
+    def all_object(self):
+         return super().get_queryset()
+    def deleted_object(self):
+        return super().get_queryset().filter(deleted=True)
+    def nodeleted_object(self):
+        return super().get_queryset().filter(deleted=False)
+
+class Core(Soft_delete):
+    created_on=models.DateTimeField(default=1,null=True)
+    created_by=models.IntegerField(default=1)
+    updated_by=models.IntegerField()
+    plant=models.CharField(max_length=30,null=True)
+    program=models.CharField(max_length=30,null=True)
+    supplier=models.CharField(max_length=30,null=True)
+    part_number=models.CharField(max_length=30,null=True)
+    create=models.CharField(max_length=30,null=True)
+    type_of_alert=models.CharField(max_length=30,null=True)
+    requested_date=models.DateField()
+    needed_quantity=models.FloatField()
+    production_comments=models.TextField(null=True)
+    status=models.CharField(max_length=30,null=True)
+    procurement_comments=models.TextField()
+    closing_date=models.DateField()
+    duration_of_the_event=models.CharField(max_length=30,null=True)
+    objects = SoftDeleteManager()
+
+        
+
+
+        
