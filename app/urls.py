@@ -3,4 +3,5 @@ from app import views
 urlpatterns = [
     path('index',views.home,name='index'),
     path ('corform',views.coreform,name='corform'),
+    path('affiche',views.affiche,name='affiche')
 ]

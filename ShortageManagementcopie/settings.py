@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'app',
     'administration',
     'crispy_forms',
+    'django_bootstrap_icons'
     
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -84,7 +85,7 @@ DATABASES = {
         # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'shortagemanquant_db',
+        'NAME': 'db_latecoere',
 
         'USER': 'postgres',
 

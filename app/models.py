@@ -1,4 +1,4 @@
-import datetime
+from datetime import date, datetime
 from django.db import models
 
 # Create your models here.
@@ -240,8 +240,8 @@ class Soft_delete(models.Model): #model info
     # uploaded_by= models.IntegerField(null=True, default='1')
     # uploaded_at= models.DateTimeField(null=True, auto_now_add=True)
     deleted=models.BooleanField(default=False)
-    deleted_by=models.IntegerField()
-    deleted_on=models.DateTimeField()
+    deleted_by=models.IntegerField(null=True)
+    deleted_on=models.DateTimeField(null=True)
     def soft_delete(self):
         self.deleted = True
         self.save()
@@ -263,20 +263,21 @@ class SoftDeleteManager(models.Manager):
         return super().get_queryset().filter(deleted=False)
 
 class Core(Soft_delete):
-    created_on=models.DateTimeField(default=1,null=True)
+    created_on=models.DateTimeField()
     created_by=models.IntegerField(default=1)
-    updated_by=models.IntegerField()
+    updated_by=models.IntegerField(default=1)
+    updated_on=models.DateTimeField()
     plant=models.CharField(max_length=30,null=True)
     program=models.CharField(max_length=30,null=True)
     supplier=models.CharField(max_length=30,null=True)
-    part_number=models.CharField(max_length=30,null=True)
+    part_number=models.FloatField(null=True)
     create=models.CharField(max_length=30,null=True)
     type_of_alert=models.CharField(max_length=30,null=True)
     requested_date=models.DateField()
-    needed_quantity=models.FloatField()
+    needed_quantity=models.FloatField(null=True)
     production_comments=models.TextField(null=True)
     status=models.CharField(max_length=30,null=True)
-    procurement_comments=models.TextField()
+    procurement_comments=models.TextField(null=True)
     closing_date=models.DateField()
     duration_of_the_event=models.CharField(max_length=30,null=True)
     objects = SoftDeleteManager()

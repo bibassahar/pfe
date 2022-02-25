@@ -1,40 +1,45 @@
 # Create your views here.
+from asyncio.windows_events import NULL
 from io import StringIO
 from django.shortcuts import render
 import pandas as pd
 import psycopg2
-from datetime import datetime
+from datetime import date, datetime
 import pathlib
 import time
 from app.forms import Myform
-
+from app.models import Core
 
 
 from app.models import MB52,SE16N_CEPC,SE16N_T001L,SE16N_T024,ZMM_CARNET_CDE_IS,ZRPFLG13
+def affiche(request):
+    data=Core.objects.all()
+    return render(request,r'app\affiche.html',{'tabledata':data})
 
 def coreform(request):
     if  (request.method == 'POST') :
         myform = Myform(request.POST)
-        myform.save(commit=False)
-        instance=myform
-        instance.created_on='2022-02-24 00:00:00'
-        instance.created_by='1'
-        print(instance)
-        instance.save()
+        if myform.is_valid():
+            instance=myform.save(commit=False)
+            instance.created_on =datetime.now()
+            instance.updated_on =datetime.now()
+            instance.created_by='1'
+            instance.save()
         
     return render(request,'app\corform.html',{'myform' : Myform} )
+    
 def home(request):
-    MB52.objects.all().delete()
-    SE16N_CEPC.objects.all().delete()
-    SE16N_T001L.objects.all().delete()
-    SE16N_T024.objects.all().delete()
-    ZMM_CARNET_CDE_IS.objects.all().delete()
-    ZRPFLG13.objects.all().delete()
-    uploaded_files()
-    return render(request,'app\index.html')
+        MB52.objects.all().delete()
+        SE16N_CEPC.objects.all().delete()
+        SE16N_T001L.objects.all().delete()
+        SE16N_T024.objects.all().delete()
+        ZMM_CARNET_CDE_IS.objects.all().delete()
+        ZRPFLG13.objects.all().delete()
+        uploaded_files()
+        return render(request,'app\index.html')
 def uploaded_files():
         #connection to DB 
-    conn= psycopg2.connect(host='localhost', dbname='shortagemanquant_db', user='postgres', password='sahar',port='5432')
+    conn= psycopg2.connect(host='localhost', dbname='db_latecoere', user='postgres', password='sahar',port='5432')
     
     file1=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\MB52.xlsx')
     file2=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_CEPC.xlsx')
