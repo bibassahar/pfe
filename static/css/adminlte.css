@@ -2886,6 +2886,7 @@ fieldset:disabled a.btn {
 .btn-outline-primary {
   color: #007bff;
   border-color: #007bff;
+  width:100px;
 }
 
 .btn-outline-primary:hover {
@@ -53008,5 +53009,8 @@ a.text-muted:hover {
 
 .dark-mode .border-dark {
   border-color: #4b545c !important;
+}
+.btn btn-outline-primary {
+  width: 50px;
 }
 /*# sourceMappingURL=adminlte.css.map */

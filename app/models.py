@@ -235,6 +235,13 @@ class ZRPFLG13(models.Model): #Model ZRPFLG13
     item_order = models.FloatField(null=True)              #Point Commande		
     planif_device = models.CharField(max_length=10,null=True) #Unité Planif	
 
+class SoftDeleteManager(models.Manager):
+    # def deleted_object(self):
+    #     return super().get_queryset().filter(deleted=True)
+    # def nodeleted_object(self):
+    #     return super().get_queryset().filter(deleted=False)
+       def get_queryset(self):
+           return super().get_queryset().filter(deleted=False)
 
 class Soft_delete(models.Model): #model info 
     # uploaded_by= models.IntegerField(null=True, default='1')
@@ -242,6 +249,8 @@ class Soft_delete(models.Model): #model info
     deleted=models.BooleanField(default=False)
     deleted_by=models.IntegerField(null=True)
     deleted_on=models.DateTimeField(null=True)
+    objects=models.Manager()
+    undeleted_objects=SoftDeleteManager()
     def soft_delete(self):
         self.deleted = True
         self.save()
@@ -254,13 +263,7 @@ class Soft_delete(models.Model): #model info
     class Meta:
         abstract=True
 
-class SoftDeleteManager(models.Manager):
-    def all_object(self):
-         return super().get_queryset()
-    def deleted_object(self):
-        return super().get_queryset().filter(deleted=True)
-    def nodeleted_object(self):
-        return super().get_queryset().filter(deleted=False)
+
 
 class Core(Soft_delete):
     created_on=models.DateTimeField()
@@ -280,7 +283,7 @@ class Core(Soft_delete):
     procurement_comments=models.TextField(null=True)
     closing_date=models.DateField()
     duration_of_the_event=models.CharField(max_length=30,null=True)
-    objects = SoftDeleteManager()
+    # objects = SoftDeleteManager()
 
         
 

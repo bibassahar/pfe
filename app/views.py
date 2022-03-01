@@ -1,22 +1,39 @@
 # Create your views here.
-from asyncio.windows_events import NULL
 from io import StringIO
 from django.shortcuts import render
+from django.shortcuts import redirect
 import pandas as pd
 import psycopg2
-from datetime import date, datetime
+from datetime import datetime
 import pathlib
 import time
 from app.forms import Myform
-from app.models import Core
 
 
-from app.models import MB52,SE16N_CEPC,SE16N_T001L,SE16N_T024,ZMM_CARNET_CDE_IS,ZRPFLG13
-def affiche(request):
-    data=Core.objects.all()
-    return render(request,r'app\affiche.html',{'tabledata':data})
+from app.models import MB52,SE16N_CEPC,SE16N_T001L,SE16N_T024,ZMM_CARNET_CDE_IS,ZRPFLG13,Core
 
-def coreform(request):
+def delete_core(request, pk): #function soft-delete
+    core=Core.objects.get(id=pk)
+    core.deleted=True
+    core.deleted_on=datetime.now()
+    core.deleted_by=1
+    core.save()
+    return redirect('details')
+
+def update_core(request,pk): #function for update core
+    core=Core.objects.get(id=pk)
+    myform=Myform(instance=core)
+    if (request.method=='POST'):
+        myform = Myform(request.POST,instance=core)
+        if myform.is_valid():
+            myform.save()
+        return redirect('details')
+    return render(request,'app/updateForm.html',{'core' : core,'myform' : myform}) 
+def details(request):
+    data=Core.undeleted_objects.all()
+    return render(request,r'app\details.html',{'tabledata':data})
+
+def create_core(request):#create new core
     if  (request.method == 'POST') :
         myform = Myform(request.POST)
         if myform.is_valid():
@@ -25,8 +42,9 @@ def coreform(request):
             instance.updated_on =datetime.now()
             instance.created_by='1'
             instance.save()
+            return redirect('details')
         
-    return render(request,'app\corform.html',{'myform' : Myform} )
+    return render(request,'app\create_core.html',{'myform' : Myform} )
     
 def home(request):
         MB52.objects.all().delete()
