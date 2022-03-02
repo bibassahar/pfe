@@ -7,10 +7,10 @@ import psycopg2
 from datetime import datetime
 import pathlib
 import time
-from app.forms import Myform
+from shortage.forms import Myform
 
 
-from app.models import MB52,SE16N_CEPC,SE16N_T001L,SE16N_T024,ZMM_CARNET_CDE_IS,ZRPFLG13,Core
+from shortage.models import MB52,SE16N_CEPC,SE16N_T001L,SE16N_T024,ZMM_CARNET_CDE_IS,ZRPFLG13,Core
 
 def delete_core(request, pk): #function soft-delete
     core=Core.objects.get(id=pk)
@@ -29,7 +29,7 @@ def update_core(request,pk): #function for update core
             myform.save()
         return redirect('details')
     return render(request,'app/updateForm.html',{'core' : core,'myform' : myform}) 
-def details(request):
+def details(request):#show list of core
     data=Core.undeleted_objects.all()
     return render(request,r'app\details.html',{'tabledata':data})
 
@@ -164,7 +164,7 @@ def import_file_MB52(con,file,username,uploaded_at):
     with con.cursor() as curs:
         curs.copy_from(
             file=mb,
-            table="app_mb52",
+            table="shortage_mb52",
             columns=[
               'uploaded_by',
                'uploaded_at',
@@ -210,7 +210,7 @@ def import_file_SE16N_CEPC(con,file,username,uploaded_at):
         with con.cursor() as curs:
             curs.copy_from(
                 file=mb,
-                table="app_se16n_cepc",
+                table="shortage_se16n_cepc",
                 columns=[
                     'uploaded_by',
                     'uploaded_at',
@@ -287,7 +287,7 @@ def import_file_SE16N_T001L(con,file,username,uploaded_at):
     with con.cursor() as curs:
         curs.copy_from(
             file=mb,
-            table="app_se16n_t001l",
+            table="shortage_se16n_t001l",
             columns=[
                     'uploaded_by',
                     'uploaded_at',
@@ -336,7 +336,7 @@ def import_file_SE16N_T024(con,file,username,uploaded_at):
     with con.cursor() as curs:
         curs.copy_from(
             file=SE24,
-            table="app_se16n_t024",
+            table="shortage_se16n_t024",
             columns=[
               'uploaded_by',
                'uploaded_at',
@@ -372,7 +372,7 @@ def import_file_ZMM_CARNET_CDE_IS(con,file,username,uploaded_at):
     with con.cursor() as curs:
         curs.copy_from(
             file=mb,
-            table="app_zmm_carnet_cde_is",
+            table="shortage_zmm_carnet_cde_is",
             columns=[
                 'uploaded_by',
                 'uploaded_at',
@@ -459,7 +459,7 @@ def  import_file_ZRPFLG13(con,file,username,uploded_at):
     with con.cursor() as curs:
         curs.copy_from(
             file=zrp,
-            table="app_zrpflg13",
+            table="shortage_zrpflg13",
             columns=[
                         'uploaded_by',
                         'uploaded_at',
