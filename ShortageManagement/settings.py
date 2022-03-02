@@ -85,7 +85,7 @@ DATABASES = {
         # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'db_latecoere',
+        'NAME': 'latecoere_db',
 
         'USER': 'postgres',
 

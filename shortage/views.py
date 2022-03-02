@@ -1,4 +1,5 @@
 # Create your views here.
+from asyncio.windows_events import NULL
 from io import StringIO
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -47,114 +48,56 @@ def create_core(request):#create new core
     return render(request,'app\create_core.html',{'myform' : Myform} )
     
 def home(request):
-        MB52.objects.all().delete()
-        SE16N_CEPC.objects.all().delete()
-        SE16N_T001L.objects.all().delete()
-        SE16N_T024.objects.all().delete()
-        ZMM_CARNET_CDE_IS.objects.all().delete()
-        ZRPFLG13.objects.all().delete()
-        uploaded_files()
-        return render(request,'app\index.html')
+    # MB52.objects.all().delete()
+        # SE16N_CEPC.objects.all().delete()
+        # SE16N_T001L.objects.all().delete()
+        # SE16N_T024.objects.all().delete()
+        # ZMM_CARNET_CDE_IS.objects.all().delete()
+        # ZRPFLG13.objects.all().delete()
+    uploaded_files()
+    
+    return render(request,'app\index.html')
 def uploaded_files():
         #connection to DB 
-    conn= psycopg2.connect(host='localhost', dbname='db_latecoere', user='postgres', password='sahar',port='5432')
-    
+    conn= psycopg2.connect(host='localhost', dbname='latecoere_db', user='postgres', password='sahar',port='5432')
     file1=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\MB52.xlsx')
     file2=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_CEPC.xlsx')
     file3=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_T001L.xlsx')
     file4=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_T024.xlsx')
     file5=pathlib.Path( r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\ZMM_CARNET_CDE_IS.xlsx')
     file6=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\ZRPFLG13.txt')
-
     #User name
     uploded_by = 1
     #Date time for upload files
     uploded_at = datetime.now()
-
     #control statment to check if files exists    
-    if (file1.exists() and file2.exists() and file3.exists() and file4.exists() and file5.exists() and file6.exists() ):
-    
-        start=time.time()
-        s1=time.time()
-        import_file_MB52(conn,file1,uploded_by,uploded_at)
-        e1=time.time()
-        print('*'*50 )
-        print('MB52')
-        print(e1-s1)
-        print(MB52.objects.all().count())
-        print('*'*50 )
+    import_file_MB52(conn,file1,uploded_by,uploded_at)
 
-        s2=time.time()
-        import_file_SE16N_CEPC(conn,file2,uploded_by,uploded_at)
-        e2=time.time()
-        print('*'*50)
-        print('SE16N_CEPC')
-        print(e2-s2)
-        print('*'*50 )
-        print(SE16N_CEPC.objects.all().count())
-        print('*'*50 )
-
-        
-        s3=time.time()
-        import_file_SE16N_T001L(conn,file3,uploded_by,uploded_at)
-        e3=time.time()
-        print('*'*50 )
-        print('SE16N_T001L')
-        print(e3-s3)
-        print('*'*50 )
-        print(SE16N_T001L.objects.all().count())
-        
-        print('*'*50 )
-
-        s4=time.time()
-        import_file_SE16N_T024(conn,file4,uploded_by,uploded_at)
-        e4=time.time()
-        print('*'*50 )
-        print('SE16N_T024')
-        print(e4-s4)
-        print('*'*50 )
-        print(SE16N_T024.objects.all().count())
-        print('*'*50 )
-
-        s5=time.time()
-        import_file_ZMM_CARNET_CDE_IS(conn,file5,uploded_by,uploded_at)
-        e5=time.time()
-        print('*'*50 )
-        print('ZMM_CARNET_CDE_IS')
-        print(e5-s5)
-        print('*'*50 )
-        print(ZMM_CARNET_CDE_IS.objects.all().count())
-        print('*'*50 )
-        
-
-        s6=time.time()
-        import_file_ZRPFLG13(conn,file6,uploded_by,uploded_at)
-        e6=time.time()
-        print('*'*50 )
-        print('ZRPFLG13')
-        print(e6-s6)
-        print('*'*50 )
-        print(ZRPFLG13.objects.all().count())
-        print('*'*50 )
-        end=time.time()
-        total=end-start
-        print('#'*50)
-        print('total')
-        print('#'*50)
-        print(total)
-    else:
-        print("files  not found")
+    # if (file1.exists() and file2.exists() and file3.exists() and file4.exists() and file5.exists() and file6.exists() ):
+    #     import_file_MB52(conn,file1,uploded_by,uploded_at)
+    #     import_file_SE16N_CEPC(conn,file2,uploded_by,uploded_at)
+    #     import_file_SE16N_T001L(conn,file3,uploded_by,uploded_at)
+    #     import_file_SE16N_T024(conn,file4,uploded_by,uploded_at)
+    #     import_file_ZMM_CARNET_CDE_IS(conn,file5,uploded_by,uploded_at)
+    #     import_file_ZRPFLG13(conn,file6,uploded_by,uploded_at)
+    # else:
+    #     print("files  not found")
 
 #function for import file MB52
 def import_file_MB52(con,file,username,uploaded_at):
     #Read file
     df = pd.read_excel(file) # to read file excel
     #insert 2 column created by, created at
-  
-    df.insert(0,'uploaded_by',username,True)
-    df.insert(1,'uploaded_at',uploaded_at,True)
-     
-    
+    data=MB52.objects.values_list('file_number').distinct()
+    if data: 
+        file_number=(list(data)[-1][-1]+1)
+    else:
+        file_number=1
+    df.insert(0,'file_number',file_number,True)
+    df.insert(1,'uploaded_by',username,True)
+    df.insert(2,'uploaded_at',uploaded_at,True)
+
+    df=df.head(10)
     print(df)
     df=df.to_csv(index=False,header=None) #To convert to csv
     
@@ -166,7 +109,8 @@ def import_file_MB52(con,file,username,uploaded_at):
             file=mb,
             table="shortage_mb52",
             columns=[
-              'uploaded_by',
+               'file_number',
+               'uploaded_by',
                'uploaded_at',
                'material',
                'division',
@@ -196,22 +140,28 @@ def import_file_SE16N_CEPC(con,file,username,uploaded_at):
 
         #Read file
         df = pd.read_excel(file,index_col=False) # to read file excel
-        #insert 2 column created by, created at
-    
-        df.insert(0,'uploaded_by',username,True)
-        df.insert(1,'uploaded_at',uploaded_at,True)
+        data=SE16N_CEPC.objects.values_list('file_number').distinct()
+        if data ==0:
+            file_number=1
+        else:
+            file_number=(list(data)[-1][-1]+1)
+               
+        df.insert(0,'file_number',file_number,True)
+        df.insert(1,'uploaded_by',username,True)
+        df.insert(2,'uploaded_at',uploaded_at,True)
         
         print(df)
         df=df.to_csv(index=False,header=None,sep=';') #To convert to csv
         
-        mb=StringIO()
-        mb.write(df)
-        mb.seek(0)
+        se=StringIO()
+        se.write(df)
+        se.seek(0)
         with con.cursor() as curs:
             curs.copy_from(
-                file=mb,
+                file=se,
                 table="shortage_se16n_cepc",
                 columns=[
+                    'file_number',
                     'uploaded_by',
                     'uploaded_at',
                     'profit_center',
@@ -273,22 +223,28 @@ def import_file_SE16N_CEPC(con,file,username,uploaded_at):
 def import_file_SE16N_T001L(con,file,username,uploaded_at):
     #     #Read file
     df = pd.read_excel(file,index_col=False) # to read file excel
-    #insert 2 column created by, created at
-    
-    df.insert(0,'uploaded_by',username,True)
-    df.insert(1,'uploaded_at',uploaded_at,True)
+    data=SE16N_T001L.objects.values_list('file_number').distinct()
+    if data ==0:
+        file_number=1
+    else:
+         file_number=(list(data)[-1][-1]+1)
         
+    df.insert(0,'file_number',file_number,True)
+    df.insert(1,'uploaded_by',username,True)
+    df.insert(2,'uploaded_at',uploaded_at,True)
+    #insert 2 column created by, created at
     print(df)
     df=df.to_csv(index=False,header=None) #To convert to csv
         
-    mb=StringIO()
-    mb.write(df)
-    mb.seek(0)
+    se=StringIO()
+    se.write(df)
+    se.seek(0)
     with con.cursor() as curs:
         curs.copy_from(
-            file=mb,
+            file=se,
             table="shortage_se16n_t001l",
             columns=[
+                    'file_number',
                     'uploaded_by',
                     'uploaded_at',
                     'plant',
@@ -322,10 +278,15 @@ def import_file_SE16N_T001L(con,file,username,uploaded_at):
 def import_file_SE16N_T024(con,file,username,uploaded_at):
       #Read file
     df = pd.read_excel(file) # to read file excel
-    #insert 2 column created by, created at
-  
-    df.insert(0,'uploaded_by',username,True)
-    df.insert(1,'uploaded_at',uploaded_at,True)
+    data=SE16N_T024.objects.values_list('file_number').distinct()
+    if data ==0:
+            file_number=1
+    else:
+        file_number=(list(data)[-1][-1]+1)
+        
+    df.insert(0,'file_number',file_number,True)
+    df.insert(1,'uploaded_by',username,True)
+    df.insert(2,'uploaded_at',uploaded_at,True)
      
     print(df)
     df=df.to_csv(index=False,header=None) #To convert to csv
@@ -338,7 +299,8 @@ def import_file_SE16N_T024(con,file,username,uploaded_at):
             file=SE24,
             table="shortage_se16n_t024",
             columns=[
-              'uploaded_by',
+               'file_number',
+               'uploaded_by',
                'uploaded_at',
                'purchasing_group',
                'description_p_group',
@@ -358,22 +320,28 @@ def import_file_SE16N_T024(con,file,username,uploaded_at):
 def import_file_ZMM_CARNET_CDE_IS(con,file,username,uploaded_at):
      #Read file
     df = pd.read_excel(file) # to read file excel
-    #insert 2 column created by, created at
-  
-    df.insert(0,'uploaded_by',username,True)
-    df.insert(1,'uploaded_at',uploaded_at,True)
+    data=ZMM_CARNET_CDE_IS.objects.values_list('file_number').distinct()
+    if data:
+        file_number=(list(data)[-1][-1]+1)
+    else:
+        file_number=1
+        
+    df.insert(0,'file_number',file_number,True)
+    df.insert(1,'uploaded_by',username,True)
+    df.insert(2,'uploaded_at',uploaded_at,True)
      
     print(df)
     df=df.to_csv(index=False,header=None,sep='|') #To convert to csv
     
-    mb=StringIO()
-    mb.write(df)
-    mb.seek(0)
+    zmm=StringIO()
+    zmm.write(df)
+    zmm.seek(0)
     with con.cursor() as curs:
         curs.copy_from(
-            file=mb,
+            file=zmm,
             table="shortage_zmm_carnet_cde_is",
             columns=[
+                'file_number',
                 'uploaded_by',
                 'uploaded_at',
                 'request_no',
@@ -434,20 +402,25 @@ def import_file_ZMM_CARNET_CDE_IS(con,file,username,uploaded_at):
         )
     con.commit() 
 #function for Import file ZRPFLG13
-def  import_file_ZRPFLG13(con,file,username,uploded_at):
+def  import_file_ZRPFLG13(con,file,username,uploaded_at):
   #Read file
     df = pd.read_csv(file,sep=';',encoding = "ISO-8859-1",index_col=False) # to read file excel
     #insert 2 column created by, created at
-    # print(df.head(10))
-    print(df.dtypes)
     for col in df.columns:
         if df[col].dtypes != 'int64':
-            #print(col)
             df[col]=df[col].str.strip()
             df[col]=df[col].str.replace(',','.')
 
-    df.insert(0,'uploaded_by',username,True)
-    df.insert(1,'uploaded_at',uploded_at,True)
+   
+    data=ZRPFLG13.objects.values_list('file_number').distinct()
+    if data ==0:
+        file_number=1
+    else:
+        file_number=(list(data)[-1][-1]+1)
+           
+    df.insert(0,'file_number',file_number,True)
+    df.insert(1,'uploaded_by',username,True)
+    df.insert(2,'uploaded_at',uploaded_at,True)
 
      
     print(df)
@@ -461,6 +434,7 @@ def  import_file_ZRPFLG13(con,file,username,uploded_at):
             file=zrp,
             table="shortage_zrpflg13",
             columns=[
+                        'file_number',
                         'uploaded_by',
                         'uploaded_at',
                         'period',           	

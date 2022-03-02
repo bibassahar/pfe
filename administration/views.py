@@ -1,12 +1,15 @@
-from re import match
 from django.shortcuts import render
-from shortage.models import MB52,SE16N_CEPC,SE16N_T001L,SE16N_T024,ZMM_CARNET_CDE_IS,ZRPFLG13
+from django.apps import apps
+
 
 # Create your views here.
 def files_list(request):
-    return render(request,r'administration\files_list.html' )
+    models_name=apps.all_models['shortage']#to get all models in shortage
 
-def details_file(request,namefile):
-    data=namefile.objects.all()
+    return render(request,r'administration\files_list.html' ,{'models_name':models_name})
+
+def file_details(request,namefile):
+    Model=apps.get_model('shortage',namefile) #to get model from shortage
     
-    return render(request,r'administration\details.html',{'data':data})
+    data=Model.objects.values('file_number','uploaded_by','uploded_at')
+    return render(request,r'administration\file_details.html',{'data':data})

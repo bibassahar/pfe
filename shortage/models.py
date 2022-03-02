@@ -5,6 +5,7 @@ from django.db import models
 
 
 class MB52(models.Model): #Model MB52
+    file_number=models.IntegerField(null=True)
     uploaded_by=models.IntegerField(null=True)
     uploaded_at=models.DateTimeField(null=True)
     material = models.CharField(max_length=30,null=True) #Numéro d'article	
@@ -28,6 +29,7 @@ class MB52(models.Model): #Model MB52
 
 
 class SE16N_CEPC(models.Model): #Model SE16N_CEPC
+    file_number=models.IntegerField(null=True)
     uploaded_by = models.IntegerField()
     uploaded_at= models.DateTimeField()
     profit_center = models.CharField(max_length=30,null=True) #Centre de profit
@@ -82,6 +84,7 @@ class SE16N_CEPC(models.Model): #Model SE16N_CEPC
     profit_center_short_text_for_matchcode = models.CharField(max_length=100,null=True) #Désing. centre de pro
 
 class SE16N_T001L(models.Model):
+    file_number=models.IntegerField(null=True)
     uploaded_by = models.IntegerField()
     uploaded_at= models.DateTimeField()
     plant = models.CharField(null=True,max_length=20) #Division
@@ -107,7 +110,7 @@ class SE16N_T001L(models.Model):
     tank_assgn = models.CharField(max_length=20,null=True) #Affectat. bac
 
 class SE16N_T024(models.Model): #Model SE16N_T024
-
+    file_number=models.IntegerField(null=True)
     uploaded_by = models.IntegerField()
     uploaded_at= models.DateTimeField()
     purchasing_group = models.CharField(max_length=20,null=True) #Groupe d'acheteurs	
@@ -121,6 +124,7 @@ class SE16N_T024(models.Model): #Model SE16N_T024
     user_name = models.CharField(max_length=20,null=True) #Utilisateur	
     
 class ZMM_CARNET_CDE_IS(models.Model): #Model ZMM_CARNET_CDE_IS
+     file_number=models.IntegerField(null=True)
      uploaded_by = models.IntegerField(null=True)
      uploaded_at= models.DateTimeField()
      request_no = models.CharField(max_length=30,null=True) #N° Demande		
@@ -179,6 +183,7 @@ class ZMM_CARNET_CDE_IS(models.Model): #Model ZMM_CARNET_CDE_IS
 
 
 class ZRPFLG13(models.Model): #Model ZRPFLG13 
+    file_number=models.IntegerField(null=True)
     uploaded_by=models.IntegerField(null=True)
     uploaded_at=models.DateTimeField(null=True)
     period = models.FloatField(null=True)              #Période	

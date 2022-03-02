@@ -13,12 +13,11 @@
                                   </div>
                                 <div class='body'>
                                         <div class="list-group" id="list-tab" role="tablist">
-                                                <a class="list-group-item list-group-item-action active"  id="MB52" data-bs-toggle="list"  href="{% url 'details' 'MB52'  %}" role="tab">MB52</a>
-                                                <a class="list-group-item list-group-item-action"  id="SE16N_CEPC" data-bs-toggle="list" href="{% url 'details'  %}">SE16N_CEPC</a>
-                                                <a class="list-group-item list-group-item-action"  id="SE16N_T001L" data-bs-toggle="list"href="{% url 'details'  %}">SE16N_T001L</a>
-                                                <a class="list-group-item list-group-item-action"  id="list-home-list" data-bs-toggle="list"href="{% url 'details'  %}">SE16N_T024</a>
-                                                <a class="list-group-item list-group-item-action"  id="list-home-list" data-bs-toggle="list"href="{% url 'details'  %}">ZMM_CARNET_CDE_IS</a>
-                                                <a class="list-group-item list-group-item-action"  id="list-home-list" data-bs-toggle="list"href="{% url 'details'  %}">ZRPFLG13</a>
+                                                {% for model in models_name%}
+                                                        {% if model != 'core'%}
+                                                        <a class="list-group-item list-group-item-action "   data-bs-toggle="list"  href="{% url 'file_details' model%}" role="tab">{{model}}</a>
+                                                        {% endif %}
+                                                 {%endfor%}       
                                         </div> 
                                         
                                          
