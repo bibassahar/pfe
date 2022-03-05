@@ -12,7 +12,7 @@
                     <div class="card-body">
                                 <a href="{% url 'create_core' %}" class="btn btn-outline-primary"   style='width:100px'>New</a>
                                 <div>
-                                <table class="table table-hover">
+                                <table class="table table-hover table-sm table-bordered  table-responsive" style='white-space:nowrap;'>
                                         <thead>
                                             <tr>
                                             <th scope="col">#</th>
@@ -31,7 +31,7 @@
                                             <th scope="col">Duration of the event</th>
                                             </tr>
                                         </thead>
-                                    <tbody>
+                                    <tbody >
                                             {% for data in tabledata %}
                                             <tr>
                                                 <td>{{data.id}}</td>

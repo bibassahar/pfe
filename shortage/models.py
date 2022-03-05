@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import  datetime
 from django.db import models
 
 # Create your models here.
@@ -25,7 +25,8 @@ class MB52(models.Model): #Model MB52
     blocked=models.FloatField(null=True) #Bloqué	
     blocked_stock_value=models.FloatField(null=True) #Val. stock bloqué	
     returns=models.FloatField(null=True) #Retours	
-    blocked_return_stock_value=models.FloatField(null=True) #Val.stk ret.bloq.    
+    blocked_return_stock_value=models.FloatField(null=True) #Val.stk ret.bloq.   
+
 
 
 class SE16N_CEPC(models.Model): #Model SE16N_CEPC
@@ -82,6 +83,7 @@ class SE16N_CEPC(models.Model): #Model SE16N_CEPC
     name = models.CharField(max_length=30,null=True) #Désignation
     long_text = models.CharField(max_length=100,null=True) #Texte descriptif  
     profit_center_short_text_for_matchcode = models.CharField(max_length=100,null=True) #Désing. centre de pro
+   
 
 class SE16N_T001L(models.Model):
     file_number=models.IntegerField(null=True)
@@ -109,6 +111,7 @@ class SE16N_T001L(models.Model):
     in_transit_assignment = models.CharField(max_length=20,null=True) # Affectation transit		
     tank_assgn = models.CharField(max_length=20,null=True) #Affectat. bac
 
+
 class SE16N_T024(models.Model): #Model SE16N_T024
     file_number=models.IntegerField(null=True)
     uploaded_by = models.IntegerField()
@@ -122,7 +125,7 @@ class SE16N_T024(models.Model): #Model SE16N_T024
     extension = models.CharField(max_length=20,null=True) #Numéro de poste		
     e_mail_address = models.CharField(max_length=50,null=True) #Adresse e-mail	
     user_name = models.CharField(max_length=20,null=True) #Utilisateur	
-    
+
 class ZMM_CARNET_CDE_IS(models.Model): #Model ZMM_CARNET_CDE_IS
      file_number=models.IntegerField(null=True)
      uploaded_by = models.IntegerField(null=True)
@@ -179,6 +182,7 @@ class ZMM_CARNET_CDE_IS(models.Model): #Model ZMM_CARNET_CDE_IS
      exception_message_number = models.CharField(null=True,max_length=20)              #Exception message numér
      exception_message = models.CharField(max_length=50,null=True) #Exception message	
      purchasing_group = models.CharField(max_length=50,null=True) #Groupe d'acheteurs	
+
 
 
 
@@ -239,6 +243,7 @@ class ZRPFLG13(models.Model): #Model ZRPFLG13
     vmi_stock = models.FloatField(null=True)              #Stock VMI		
     item_order = models.FloatField(null=True)              #Point Commande		
     planif_device = models.CharField(max_length=10,null=True) #Unité Planif	
+
 
 class SoftDeleteManager(models.Manager):
     # def deleted_object(self):

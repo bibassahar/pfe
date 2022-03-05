@@ -8,7 +8,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Starter</title>
+  <title>Shortage Management</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -167,7 +167,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Brand Logo -->
       <a href="index3.html" class="brand-link">
         <img src="{% static 'img/AdminLTELogo.png'%}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">AdminLTE 3</span>
+        <span class="brand-text font-weight-light">Shortage Management</span>
       </a>
   
       <!-- Sidebar -->
@@ -183,7 +183,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
   
         <!-- SidebarSearch Form -->
-        <div class="form-inline">
+        {% comment %} <div class="form-inline">
           <div class="input-group" data-widget="sidebar-search">
             <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
             <div class="input-group-append">
@@ -193,46 +193,102 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </div>
           </div>
         </div>
-  
+   {% endcomment %}
+
         <!-- Sidebar Menu -->
+        <div>
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                  with font-awesome or any other icon font library -->
             <li class="nav-item menu-open">
               <a href="#" class="nav-link active">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
-                  Starter Pages
+                 Shortage
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
-                <li class="nav-item">
+                {% comment %} <li class="nav-item">
                   <a href="#" class="nav-link active">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Active Page</p>
                   </a>
-                </li>
-                <li class="nav-item">
+                </li> {% endcomment %}
+                {% comment %} <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Inactive Page</p>
                   </a>
                 </li>
               </ul>
-            </li>
+            </li> {% endcomment %}
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="{%url 'details' %}" class="nav-link">
                 <i class="nav-icon fas fa-th"></i>
                 <p>
-                  Simple Link
-                  <span class="right badge badge-danger">New</span>
+                  Core Details
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{%url 'create_core' %}" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Create Core
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{%url 'index' %}" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Import Files
                 </p>
               </a>
             </li>
           </ul>
         </nav>
+      </div>
+      <div>
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <!-- Add icons to the links using the .nav-icon class
+                 with font-awesome or any other icon font library -->
+            <li class="nav-item menu-open">
+              <a href="#" class="nav-link active">
+                <p>
+                 Administration
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                {% comment %} <li class="nav-item">
+                  <a href="#" class="nav-link active">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Active Page</p>
+                  </a>
+                </li> {% endcomment %}
+                {% comment %} <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Inactive Page</p>
+                  </a>
+                </li>
+              </ul>
+            </li> {% endcomment %}
+            <li class="nav-item">
+              <a href="{%url 'files_list' %}" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Files List
+                </p>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+        
         <!-- /.sidebar-menu -->
       </div>
       <!-- /.sidebar -->

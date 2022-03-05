@@ -3,21 +3,17 @@
 
 {% block content %}
 <div class="row">
-<a href ="files_list" >{% bs_icon 'arrow-left' size='2em'  %}</a>
+<a href ="{%url 'files_list' %}" >{% bs_icon 'arrow-left' size='2em'  %}</a>
 <div class="col-md-12">
 <div class="card" style='overflow:auto;width:100%'>
 
     <div class="card-header">
-         <h5 class="m-0">File Details</h5>
+         <h5 class="m-0">File Details {{namefile}}</h5>
     </div>
     <div class="card-body">
-        
-                <div>
-                <table class="table table-hover">
-                    
+                <table class="table table-hover table-lg table-bordered ">
                         <thead>
                             <tr>
-                            <th scope="col">#</th>
                             <th scope="col">File number</th>
                             <th scope="col">Uploded at</th>
                             <th scope="col">Uploded by</th>
@@ -25,12 +21,13 @@
                         </thead>
                     <tbody>
                         {% for data in data %}
-                            <tr>
-                                <td>{{data.id}}</td>
+                        <tr>
                                 <td>{{data.file_number}}</td>
                                 <td>{{data.uploaded_by}}</td>
                                 <td>{{data.uploaded_at}}</td>  
-                                <td><a href ="" >{% bs_icon 'trash' size='1.5em' color='red' %}</a></td>
+                            </a> 
+                                <td><a href ="{% url 'file_content' data.file_number namefile%}" >{% bs_icon 'folder2-open' size='1.5em' %}</a></td>
+                                <td><a href ="{% url 'delete_file' data.file_number namefile%}" >{% bs_icon 'trash' size='1.5em' color='red' %}</a></td>
                                {%empty%}
                                 <tr><td colspan='15' style='text-align:center'>No Data available</td></tr>      
                             </tr>
@@ -40,7 +37,7 @@
                
                 </table>
                 </div>
-    
+            
     </div>
 </div>
 </div>
