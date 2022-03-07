@@ -58,7 +58,11 @@
                                           {% for d in data %}
                                             <tr>
                                               {%for i in d%}
-                                                <td style='white-space:nowrap;'>{{i}}</td>
+                                                {% if i.date%}
+                                                    <td style='white-space:nowrap;'>{{i.date|date:"d M Y"}}</td>
+                                                  {%else %}
+                                                    <td style='white-space:nowrap;'>{{i}}</td>
+                                                  {%endif%}
                                                 {%endfor%}
                                             </tr>
                                           {% endfor %}

@@ -34,10 +34,10 @@ class SE16N_CEPC(models.Model): #Model SE16N_CEPC
     uploaded_by = models.IntegerField()
     uploaded_at= models.DateTimeField()
     profit_center = models.CharField(max_length=30,null=True) #Centre de profit
-    valid_to = models.DateField(null=True) #Fin de validité
+    valid_to = models.DateTimeField(null=True) #Fin de validité
     controlling_area = models.CharField(max_length=30,null=True) #Périmètre analytique
-    valid_from =models.DateField(null=True) #Début de validité  
-    created_on=models.DateField(null=True) #Saisi le  
+    valid_from =models.DateTimeField(null=True) #Début de validité  
+    created_on=models.DateTimeField(null=True) #Saisi le  
     created_by= models.CharField(max_length=30,null=True) #Saisi par      
     field_name_of_CO_PA_characteristic=models.CharField(max_length=30,null=True) #Nom de zone de caractér. ds CO-PA  
     department=models.CharField(max_length=30,null=True) #Département  
@@ -141,16 +141,16 @@ class ZMM_CARNET_CDE_IS(models.Model): #Model ZMM_CARNET_CDE_IS
      material = models.CharField(max_length=50,null=True) #Article			      
      designation_add_material = models.CharField(max_length=50,null=True) #Désignation add. art.			
      name = models.CharField(max_length=50,null=True) #Désignation			       
-     transmission_info = models.DateField(null=True)               #Info Transmission			
+     transmission_info = models.DateTimeField(null=True)               #Info Transmission			
      validated_by = models.CharField(max_length=50,null=True) #Validé par			      
      priority = models.CharField(max_length=50,null=True) #Priorité de l'ordre			
      quantity = models.FloatField(null=True)              #Quantité de commande			       
      quantity_to_receive = models.FloatField(null=True)              #Quantité à réceptionner			
-     date_of_purchase = models.DateField(null=True)               #Date d'achat			       
-     desired_date = models.DateField(null=True)               #date souhaitée	
-     original_delivery_date = models.DateField(null=True)               #Date de livraison initiale				
-     contractual_delivery_date = models.DateField(null=True)               #Date de livraison contractulle	
-     validated_delivery_date = models.DateField(null=True)               #Date de livraison validée	
+     date_of_purchase = models.DateTimeField(null=True)               #Date d'achat			       
+     desired_date = models.DateTimeField(null=True)               #date souhaitée	
+     original_delivery_date = models.DateTimeField(null=True)               #Date de livraison initiale				
+     contractual_delivery_date = models.DateTimeField(null=True)               #Date de livraison contractulle	
+     validated_delivery_date = models.DateTimeField(null=True)               #Date de livraison validée	
      confirmed_quantity = models.FloatField(null=True)              #Quantité confirmée
      comment = models.CharField(max_length=500,null=True) #Commentaire Appros				           
      expected_stock_week_w = models.FloatField(null=True)              #Stock Prévu Semaine S		
@@ -286,12 +286,12 @@ class Core(Soft_delete):
     part_number=models.FloatField(null=True)
     create=models.CharField(max_length=30,null=True)
     type_of_alert=models.CharField(max_length=30,null=True)
-    requested_date=models.DateField()
+    requested_date=models.DateTimeField()
     needed_quantity=models.FloatField(null=True)
     production_comments=models.TextField(null=True)
     status=models.CharField(max_length=30,null=True)
     procurement_comments=models.TextField(null=True)
-    closing_date=models.DateField()
+    closing_date=models.DateTimeField()
     duration_of_the_event=models.CharField(max_length=30,null=True)
     # objects = SoftDeleteManager()
 
