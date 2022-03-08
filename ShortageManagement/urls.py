@@ -17,8 +17,8 @@ from django.contrib import admin
 from django.urls import path,include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),  #Built in Django
     path('shortage/', include('shortage.urls')),
-    path('administration/', include('administration.urls')),
+    path('administration/', include('administration.urls')), #Custom Administration page
 
 ]

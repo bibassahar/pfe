@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 {% load bootstrap_icons %}
-
 {% block content %}
-    <div class="row">
-            
+<div class="row">   
             <div class="col-md-12">
                 <div class="card" style='overflow:auto;width:100%'>
                     <div class="card-header">
@@ -11,7 +9,7 @@
                     </div>
                     <div class="card-body">
                                 <a href="{% url 'create_core' %}" class="btn btn-outline-primary"   style='width:100px'>New</a>
-                                <div>
+                            <div>
                                 <table class="table table-hover table-sm table-bordered  table-responsive" style='white-space:nowrap;'>
                                         <thead>
                                             <tr>
@@ -48,26 +46,54 @@
                                                 <td>{{data.procurement_comments}}</td>
                                                 <td>{{data.closing_date}}</td>
                                                 <td>{{data.duration_of_the_event}}</td> 
-                                                <td><a href ="{% url 'update_core' data.id %}" >{% bs_icon 'pencil-square' size='1.5em' %}</a></td>    
-                                                <td><a href ="{% url 'delete_core' data.id %}" >{% bs_icon 'trash' size='1.5em' color='red' %}</a></td>
+                                                <td>
+                                                 <button type="button" class="btn btn-primary-outline">
+                                                    <a href="{% url 'update_core' data.id %}">{% bs_icon 'pencil-square' size='1.5em' color='blue'%}</a>
+                                                </button>
+                                              </td>    
+                                                <td>
+                                                <button type="button" class="btn btn-primary-outline" data-id='{{data.id}}'  data-toggle="modal" data-target="#deleteModel">
+                                                  {% bs_icon 'trash' size='1.5em' color='red'%}
+                                                </button>
+                                                </td>  
                                                 {%empty%}
                                                 <tr><td colspan='15' style='text-align:center'>No Data available</td></tr>      
                                             </tr>
-                                            {% endfor %}
-                                            
+                                            {% endfor %}     
                                     </tbody>
                                 </table>
-                                </div>
-                    
+                            </div>
                     </div>
                 </div>
             </div>
-          
-                </div>
-            </div>
-    </div>
- 
 </div>
 
+  <!-- Modal -->
+  <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a href =""  id='deletelink' class="btn btn-danger">Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    {% endblock content %}
+<script >
+  $('#deleteModel').on('show.bs.modal', function (event) {
+    var id = $(event.relatedTarget).data('id');
+    $(this).find(".modal-body").text('Are you sure to delete core number: '+id);
+    document.getElementById("deletelink").href="/shortage/delete_core/"+id; 
+  });
+</script>    
+{% endblock content %}

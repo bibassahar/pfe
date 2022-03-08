@@ -23,7 +23,7 @@ def file_content(request,file_number,namefile):
     data=Model.objects.filter(file_number=file_number).values_list()
     fields=[field.name for field in Model._meta.get_fields()] #get fields from model 
     page = request.GET.get('page',1)
-    paginator=Paginator(data,30) 
+    paginator=Paginator(data,30) # 30 is number of element in one page
     try:
         data=paginator.page(page)
     except PageNotAnInteger:

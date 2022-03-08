@@ -1,13 +1,12 @@
 # Create your views here.
-from asyncio.windows_events import NULL
 from io import StringIO
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.contrib import messages
 import pandas as pd
 import psycopg2
 from datetime import datetime
 import pathlib
-import time
 from shortage.forms import Myform
 
 
@@ -15,11 +14,12 @@ from shortage.models import MB52,SE16N_CEPC,SE16N_T001L,SE16N_T024,ZMM_CARNET_CD
 
 def delete_core(request, pk): #function soft-delete
     core=Core.objects.get(id=pk)
+    # messages.warning(request,"are you sure to delete core ?")
     core.deleted=True
     core.deleted_on=datetime.now()
     core.deleted_by=1
     core.save()
-    return redirect('details')
+    return redirect('core')
 
 def update_core(request,pk): #function for update core
     core=Core.objects.get(id=pk)
@@ -28,11 +28,16 @@ def update_core(request,pk): #function for update core
         myform = Myform(request.POST,instance=core)
         if myform.is_valid():
             myform.save()
-        return redirect('details')
+            # messages.success(request,"Core updated successfully!")
+            return redirect('core')
+        # else:
+        #     messages.error(request, 'Invalid form submission.')
+            
     return render(request,'app/updateForm.html',{'core' : core,'myform' : myform}) 
-def details(request):#show list of core
+    
+def core(request):#show list of core
     data=Core.undeleted_objects.all()
-    return render(request,r'app\details.html',{'tabledata':data})
+    return render(request,r'app\core.html',{'tabledata':data})
 
 def create_core(request):#create new core
     if  (request.method == 'POST') :
@@ -43,7 +48,8 @@ def create_core(request):#create new core
             instance.updated_on =datetime.now()
             instance.created_by='1'
             instance.save()
-            return redirect('details')
+            # messages.success(request,"Core created successfully!")
+            return redirect('core')
         
     return render(request,'app\create_core.html',{'myform' : Myform} )
     
@@ -56,7 +62,9 @@ def home(request):
     # ZRPFLG13.objects.all().delete()
     uploaded_files()
     
-    return render(request,'app\index.html')
+    return render(request,'app/upload.html')
+
+ #Upload Files and check if exist   
 def uploaded_files():
         #connection to DB 
     conn= psycopg2.connect(host='localhost', dbname='latecoere_db', user='postgres', password='sahar',port='5432')
@@ -79,7 +87,7 @@ def uploaded_files():
         import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,uploded_by,uploded_at)
         import_file_ZRPFLG13(conn,file_zrp,uploded_by,uploded_at)
     else:
-        print("files  not found")
+        print("files  not found") #To edit as Error MSG
 
 #function for import file MB52
 def import_file_MB52(con,file,username,uploaded_at):
@@ -95,8 +103,6 @@ def import_file_MB52(con,file,username,uploaded_at):
     df.insert(1,'uploaded_by',username,True)
     df.insert(2,'uploaded_at',uploaded_at,True)
 
-    # df=df.head(10)
-    print(df)
     df=df.to_csv(index=False,header=None) #To convert to csv
     
     mb=StringIO()

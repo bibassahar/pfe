@@ -59,11 +59,11 @@
                                             <tr>
                                               {%for i in d%}
                                                 {% if i.date%}
-                                                    <td style='white-space:nowrap;'>{{i.date|date:"d M Y"}}</td>
-                                                  {%else %}
+                                                    <td style='white-space:nowrap;'>{{i|date:"d M Y"}}</td>
+                                                {%else %}
                                                     <td style='white-space:nowrap;'>{{i}}</td>
-                                                  {%endif%}
-                                                {%endfor%}
+                                                {%endif%}
+                                              {%endfor%}
                                             </tr>
                                           {% endfor %}
                                           
