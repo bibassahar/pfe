@@ -2,93 +2,55 @@
 from io import StringIO
 from django.shortcuts import render
 from django.shortcuts import redirect
-from django.contrib import messages
+from django.db.utils import OperationalError
 import pandas as pd
 import psycopg2
 from datetime import datetime
 import pathlib
-from shortage.forms import Myform
+from shortage.forms import Myform,Form
 
-
-from shortage.models import MB52,SE16N_CEPC,SE16N_T001L,SE16N_T024,ZMM_CARNET_CDE_IS,ZRPFLG13,Core
-
-def delete_core(request, pk): #function soft-delete
-    core=Core.objects.get(id=pk)
-    # messages.warning(request,"are you sure to delete core ?")
-    core.deleted=True
-    core.deleted_on=datetime.now()
-    core.deleted_by=1
-    core.save()
-    return redirect('core')
-
-def update_core(request,pk): #function for update core
-    core=Core.objects.get(id=pk)
-    myform=Myform(instance=core)
-    if (request.method=='POST'):
-        myform = Myform(request.POST,instance=core)
-        if myform.is_valid():
-            myform.save()
-            # messages.success(request,"Core updated successfully!")
-            return redirect('core')
-        # else:
-        #     messages.error(request, 'Invalid form submission.')
-            
-    return render(request,'app/updateForm.html',{'core' : core,'myform' : myform}) 
-    
-def core(request):#show list of core
-    data=Core.undeleted_objects.all()
-    return render(request,r'app\core.html',{'tabledata':data})
-
-def create_core(request):#create new core
-    if  (request.method == 'POST') :
-        myform = Myform(request.POST)
-        if myform.is_valid():
-            instance=myform.save(commit=False)
-            instance.created_on =datetime.now()
-            instance.updated_on =datetime.now()
-            instance.created_by='1'
-            instance.save()
-            # messages.success(request,"Core created successfully!")
-            return redirect('core')
-        
-    return render(request,'app\create_core.html',{'myform' : Myform} )
-    
-def home(request):
+from shortage.models import MB52,SE16N_CEPC,SE16N_T001L,SE16N_T024,ZMM_CARNET_CDE_IS,ZRPFLG13,Core,CoreHistory
+#function to upload files
+def upload(request):
     # MB52.objects.all().delete()
     # SE16N_CEPC.objects.all().delete()
     # SE16N_T001L.objects.all().delete()
     # SE16N_T024.objects.all().delete()
     # ZMM_CARNET_CDE_IS.objects.all().delete()
     # ZRPFLG13.objects.all().delete()
-    uploaded_files()
-    
+    uploaded_files()  #call function to upload files
     return render(request,'app/upload.html')
 
  #Upload Files and check if exist   
 def uploaded_files():
-        #connection to DB 
-    conn= psycopg2.connect(host='localhost', dbname='latecoere_db', user='postgres', password='sahar',port='5432')
-    file_mb52=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\MB52.xlsx')
-    file_se16ncepc=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_CEPC.xlsx')
-    file_se16nt001l=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_T001L.xlsx')
-    file_se16nt024=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_T024.xlsx')
-    file_zmm=pathlib.Path( r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\ZMM_CARNET_CDE_IS.xlsx')
-    file_zrp=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\ZRPFLG13.txt')
-    #User name
-    uploded_by = 1
-    #Date time for upload files
-    uploded_at = datetime.now()
-    #control statment to check if files exists    
-    if (file_mb52.exists() and file_se16ncepc.exists() and file_se16nt001l.exists() and file_se16nt024.exists() and file_zmm.exists() and file_zrp.exists() ):
-        import_file_MB52(conn,file_mb52,uploded_by,uploded_at)
-        import_file_SE16N_CEPC(conn,file_se16ncepc,uploded_by,uploded_at)
-        import_file_SE16N_T001L(conn,file_se16nt001l,uploded_by,uploded_at)
-        import_file_SE16N_T024(conn,file_se16nt024,uploded_by,uploded_at)
-        import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,uploded_by,uploded_at)
-        import_file_ZRPFLG13(conn,file_zrp,uploded_by,uploded_at)
-    else:
-        print("files  not found") #To edit as Error MSG
-
+    #connection to DB 
+        try:
+            conn= psycopg2.connect(host='localhost', dbname='latecoere_db', user='postgres', password='sahar',port='5432')
+            
+        except OperationalError:
+           print('Error Establishing a DB connection')
+        #
+        file_mb52=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\MB52.xlsx')
+        file_se16ncepc=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_CEPC.xlsx')
+        file_se16nt001l=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_T001L.xlsx')
+        file_se16nt024=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_T024.xlsx')
+        file_zmm=pathlib.Path( r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\ZMM_CARNET_CDE_IS.xlsx')
+        file_zrp=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\ZRPFLG13.txt')
+        #User name
+        uploded_by = 1
+        #Date time for upload files
+        uploded_at = datetime.now()
+        #control statment to check if files exists    
+        if (file_mb52.exists() and file_se16ncepc.exists() and file_se16nt001l.exists() and file_se16nt024.exists() and file_zmm.exists() and file_zrp.exists() ):
+            import_file_MB52(conn,file_mb52,uploded_by,uploded_at)
+            import_file_SE16N_CEPC(conn,file_se16ncepc,uploded_by,uploded_at)
+            import_file_SE16N_T001L(conn,file_se16nt001l,uploded_by,uploded_at)
+            import_file_SE16N_T024(conn,file_se16nt024,uploded_by,uploded_at)
+            import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,uploded_by,uploded_at)
+            import_file_ZRPFLG13(conn,file_zrp,uploded_by,uploded_at)
+        else:
+            print('files  not found') #To edit as Error MSG
+   
 #function for import file MB52
 def import_file_MB52(con,file,username,uploaded_at):
     #Read file
@@ -499,4 +461,57 @@ def  import_file_ZRPFLG13(con,file,username,uploaded_at):
             sep=';'
         )
     con.commit() 
+
+#CRUD CORE
+def core(request):#show list of core
+    data=Core.undeleted_objects.all()
+    return render(request,r'app\core.html',{'data':data})
+
+def create_core(request):#create new core
+    if  (request.method == 'POST') :
+        myform = Myform(request.POST)
+        if myform.is_valid():
+            instance=myform.save(commit=False)
+            instance.created_on =datetime.now()
+            instance.updated_on =datetime.now()
+            instance.created_by='1'
+            instance.save()
+            return redirect('core')
+    return render(request,'app\create_core.html',{'myform' : Myform})
+
+def update_core(request,pk): #function for update core
+    core=Core.objects.get(id=pk)
+    myform=Myform(instance=core)
+    if (request.method=='POST'):
+        myform = Myform(request.POST,instance=core)
+        if myform.is_valid():
+            myform.save()
+            # messages.success(request,"Core updated successfully!")
+            return redirect('core')
+        # else:
+        #     messages.error(request, 'Invalid form submission.') 
+    return render(request,'app/updateForm.html',{'core' : core,'myform' : myform}) 
+
+def delete_core(request, pk): #function soft-delete
+    core=Core.objects.get(id=pk)
+    # messages.warning(request,"are you sure to delete core ?")
+    core.deleted=True
+    core.deleted_on=datetime.now()
+    core.deleted_by=1
+    core.save()
+    return redirect('core')
+
+def core_history(request,pk):
+    data=CoreHistory.objects.all().filter(core_id=pk).order_by('-id')
+    if (request.method == 'POST'):
+        form=Form(request.POST)
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.created_on =datetime.now()
+            instance.created_by='1'
+            instance.core_id=pk
+            instance.save()
+            return redirect('core')
+    return render(request,'app/core_history.html',{'form':Form,'pk':pk,'data':data})
+    
 

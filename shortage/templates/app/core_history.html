@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load bootstrap_icons %}
+{% load crispy_forms_tags %}
+{%block content%}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class= "col-md-4">
+        <div class="card">
+          <div class="card-header">
+               <h5 class="m-0">Add Comment</h5>
+          </div>
+          <div class="card-body">
+              <form method= "POST" class ="form-group-inline" action="{% url 'core_history' pk%}">
+                <div >
+                  {% csrf_token %}
+                  <div>
+                      <label for="recipient-name" class="col-form-label">Statut:</label>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                        <label class="form-check-label" for="inlineRadio1">Open</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                        <label class="form-check-label" for="inlineRadio2">Close</label>
+                      </div>
+                  </div>
+                  {{form|crispy}}
+                  {% comment %} Button {% endcomment %}
+                  <div class="d-flex justify-content-center">
+                   <input type="submit" class='btn btn-primary'value="save" id ="save">
+                  </div>
+              </div>
+              </form>
+            </div>
+
+        
+        </div>
+      </div>
+      
+      <div class="col-md-8">
+        <div class="card"  style='overflow-y:scroll;height:35.6%;'>
+            <div class="card-header">
+                   <h5 class="m-0">History</h5>
+            </div>
+            <div class="card-body">
+                  <div class="timeline">
+                     {%for data in data%}
+                     <div class="time-label">
+                         <span class="bg-gray">{{data.created_on|date:"d M.Y H:m"}}</span>
+                     </div>
+                    <div>
+                         <i class="fas fa-comments bg-yellow"></i>
+                        <div class="timeline-item">
+                            {% comment %} <span class="time"><i class="fas fa-clock"></i> </span> {% endcomment %}
+                            <h3 class="timeline-header">{{data.created_by}}</h3>
+                            <div class="timeline-body">{{data.comment}}</div>
+                        </div>
+                    </div>
+                        {%empty%}
+                            <p>No Comment</p>
+                     {%endfor%}
+                  </div>
+            </div>
+          </div>
+        </div>   
+    </div>
+  </div>
+</section>
+{%endblock%}

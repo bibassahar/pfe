@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load static%}
 {% load bootstrap_icons %}
 {% block content %}
 
@@ -23,7 +24,7 @@
                                                                 <div class="col-8">
                                                                 {% csrf_token %}
                                                                 {{myform|crispy}}
-                                                                <input type="submit" class='btn btn-primary' value="Submit">
+                                                                <input type="submit" class='btn btn-primary' value="update" id ="update">
                                                                 </div>
                                                         </div>
                                                 </form>
@@ -37,10 +38,12 @@
                 </div>
         </div>
 </div>
-
-
-
-
-
-  
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<link rel="stylesheet" href="{% static 'toastr/toastr.css' %}" >
+<script type="text/javascript" src="{% static 'toastr/toastr.min.js' %}"></script>  
+<script type="text/javascript">
+                  $('#update').click(function() {
+                     toastr.success('Core successfully updated');
+                  });
+</script>
 {%endblock %}

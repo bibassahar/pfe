@@ -3,6 +3,7 @@
 psycopg2
 openpyxl
 pandas
-crispy
-bootstarp icons 
+django-crispy-forms
+django-bootstrap-icons
+
 

@@ -293,7 +293,13 @@ class Core(Soft_delete):
     procurement_comments=models.TextField(null=True)
     closing_date=models.DateTimeField()
     duration_of_the_event=models.CharField(max_length=30,null=True)
-    # objects = SoftDeleteManager()
+
+class CoreHistory(models.Model):
+    core=models.ForeignKey(Core,on_delete=models.CASCADE)
+    created_on=models.DateTimeField()
+    created_by=models.IntegerField(default=1)
+    comment=models.TextField(null=True)
+   
 
         
 
