@@ -4,7 +4,7 @@
 {% load static %}
 {% block content %}
 
-<a href ="{% url 'core' %}" >{% bs_icon 'arrow-left' size='2em'  %}</a>
+<a href ="{% url 'core' %}" >{% bs_icon 'arrow-left' size='2em'%}</a>
 
 <div class='content'>
         <div class="container-fuild">
@@ -24,8 +24,8 @@
                                                                 <div class="col-8">
                                                                 {% csrf_token %}
                                                                 {{myform|crispy}}
-                                                                <div class="d-flex justify-content-center">
-                                                                <input type="submit" class='btn btn-primary'value="Add" id ="Add">
+                                                                <div class="d-flex justify-content-center" style='margin-bottom:10px'>
+                                                                 <input type="submit" class='btn btn-primary'value="Add" id ="Add">
                                                                 </div>
                                                                 </div>
                                                         </div>
@@ -42,13 +42,4 @@
             
         </div>
 </div>
-<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-<link rel="stylesheet" href="{% static 'toastr/toastr.css' %}" >
-<script type="text/javascript" src="{% static 'toastr/toastr.min.js' %}"></script>  
-<script type="text/javascript">
-                  $('#Add').click(function() {
-                     toastr.success('Core successfully created');
-                  });
-</script>
-
 {% endblock%}

@@ -8,27 +8,28 @@
                          <h5 class="m-0">List Of Core</h5>
                     </div>
                     <div class="card-body">
-                                <a href="{% url 'create_core' %}" class="btn btn-outline-primary"   style='width:100px'>New</a>
+                      <div style='margin-bottom:10px'>
+                        <a href="{% url 'create_core' %}" class="btn btn-block btn-outline-primary btn-sm " style='width:100px'>New</a>
+                      </div>
                             <div>
                                 <table class="table table-hover table-sm table-bordered  table-responsive" style='white-space:nowrap;' id="table">
                                         <thead>
                                             <tr>
                                             <th scope="col">#</th>
-                                            <th scope="col">created_on</th>
-                                            <th scope="col">created_by</th>
-                                            <th scope="col">Plant</th>
+                                            <th scope="col">Created_on</th>
+                                            <th scope="col">Created_by</th>
+                                            <th scope="col">Matrial</th>
+                                            <th scope="col">Division</th>
                                             <th scope="col">Program</th>
                                             <th scope="col">Supplier</th>
                                             <th scope="col">Part number</th>
-                                            <th scope="col">Create</th>
                                             <th scope="col">Type of alert</th>
                                             <th scope="col">Requested date</th>
                                             <th scope="col">Needed quantity</th>
-                                            <th scope="col">Production comments</th>
                                             <th scope="col">Status</th>
-                                            <th scope="col">Procurement comments</th>
                                             <th scope="col">Closing date</th>
                                             <th scope="col">Duration of the event</th>
+                                            <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                     <tbody >
@@ -37,25 +38,21 @@
                                                 <td><a href="{% url 'core_history' data.id%}"><button type="button" class="btn btn-outline-light">{{data.id}}</button</a></td>
                                                 <td>{{data.created_on}}</td>
                                                 <td>{{data.created_by}}</td>
-                                                <td>{{data.plant}}</td>
+                                                <td>{{data.material}}</td>
+                                                <td>{{data.division}}</td>
                                                 <td>{{data.program}}</td>
                                                 <td>{{data.supplier}}</td>
                                                 <td>{{data.part_number}}</td>
-                                                <td>{{data.create}}</td>
                                                 <td>{{data.type_of_alert}}</td>
                                                 <td>{{data.requested_date}}</td>
                                                 <td>{{data.needed_quantity}}</td>
-                                                <td>{{data.production_comments}}</td>
                                                 <td>{{data.status}}</td>
-                                                <td>{{data.procurement_comments}}</td>
                                                 <td>{{data.closing_date}}</td>
                                                 <td>{{data.duration_of_the_event}}</td> 
                                                 <td>
                                                  <button type="button" class="btn btn-primary-outline">
                                                     <a href="{% url 'update_core' data.id %}">{% bs_icon 'pencil-square' size='1.5em' color='blue'%}</a>
                                                  </button>
-                                                </td>    
-                                                <td>
                                                 <button type="button" class="btn btn-primary-outline" data-id='{{data.id}}'  data-toggle="modal" data-target="#deleteModel">
                                                   {% bs_icon 'trash' size='1.5em' color='red'%}
                                                 </button>
@@ -93,59 +90,11 @@
       </div>
     </div>
   </div>
-  {% comment %} <!--Modal manger -->
-  <div class="modal fade  " id="MangerModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ticket</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <label for="recipient-name" class="col-form-label">Statut:</label>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                <label class="form-check-label" for="inlineRadio1">Open</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                <label class="form-check-label" for="inlineRadio2">Close</label>
-              </div>
-           </div>
-            <div class="form-group">
-              <label for="message-text" class="col-form-label">Action:</label>
-              <textarea class="form-control" id="message-text"></textarea>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save</button>
-        </div>
-      </div>
-    </div>
-  </div> {% endcomment %}
-
 <script >
   $('#deleteModel').on('show.bs.modal', function (event) {
     var id = $(event.relatedTarget).data('id');
     $(this).find(".modal-body").text('Are you sure to delete core number: '+id);
-    document.getElementById("deletelink").href="/shortage/delete_core/"+id; 
+    document.getElementById("deletelink").href="/shortage/core/"+id +"/delete"; 
   });
- {% comment %} $('#MangerModel').on('show.bs.modal', function (event) {
-  var id = $(event.relatedTarget).data('id');
-  $(this).find(".modal-body ").val(id);
-
-  }
-  )  {% endcomment %}
 </script>    
-
-
-
-
-
 {% endblock content %}

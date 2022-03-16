@@ -1,4 +1,5 @@
 # Create your views here.
+from __future__ import division
 from io import StringIO
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -8,6 +9,7 @@ import psycopg2
 from datetime import datetime
 import pathlib
 from shortage.forms import Myform,Form
+
 
 from shortage.models import MB52,SE16N_CEPC,SE16N_T001L,SE16N_T024,ZMM_CARNET_CDE_IS,ZRPFLG13,Core,CoreHistory
 #function to upload files
@@ -469,14 +471,25 @@ def core(request):#show list of core
 
 def create_core(request):#create new core
     if  (request.method == 'POST') :
-        myform = Myform(request.POST)
-        if myform.is_valid():
-            instance=myform.save(commit=False)
-            instance.created_on =datetime.now()
-            instance.updated_on =datetime.now()
-            instance.created_by='1'
-            instance.save()
-            return redirect('core')
+        material=request.POST['material']
+        division=request.POST['division']
+        data=Core.undeleted_objects.all().filter(material=material,division=division).exclude(status='Close').first()
+
+        if data:
+            message={'type':'danger','msg':'Core is already created!'}
+            return render(request,'app/core_history.html',{'pk':data.id,'message':message})
+        else:
+            myform = Myform(request.POST)
+            if myform.is_valid():
+                instance=myform.save(commit=False)
+                instance.created_on =datetime.now()
+                instance.updated_on =datetime.now()
+                instance.created_by='1'
+                instance.save()
+                message={'type':'success','msg':'Core is  created successfully!'}
+
+                return redirect('core')
+
     return render(request,'app\create_core.html',{'myform' : Myform})
 
 def update_core(request,pk): #function for update core
@@ -492,9 +505,8 @@ def update_core(request,pk): #function for update core
         #     messages.error(request, 'Invalid form submission.') 
     return render(request,'app/updateForm.html',{'core' : core,'myform' : myform}) 
 
-def delete_core(request, pk): #function soft-delete
+def delete_core(request,pk): #function soft-delete
     core=Core.objects.get(id=pk)
-    # messages.warning(request,"are you sure to delete core ?")
     core.deleted=True
     core.deleted_on=datetime.now()
     core.deleted_by=1
@@ -503,15 +515,21 @@ def delete_core(request, pk): #function soft-delete
 
 def core_history(request,pk):
     data=CoreHistory.objects.all().filter(core_id=pk).order_by('-id')
+    core=Core.objects.get(id=pk)
     if (request.method == 'POST'):
+        core.status = request.POST['status']
+        if core.status== 'Close':
+            core.closing_date=datetime.now()
+        core.save()
         form=Form(request.POST)
         if form.is_valid():
             instance=form.save(commit=False)
             instance.created_on =datetime.now()
             instance.created_by='1'
             instance.core_id=pk
+            instance.action=request.POST['status']
             instance.save()
             return redirect('core')
-    return render(request,'app/core_history.html',{'form':Form,'pk':pk,'data':data})
+    return render(request,'app/core_history.html',{'form':Form,'pk':pk,'data':data,'core':core})
     
 

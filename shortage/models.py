@@ -274,24 +274,22 @@ class Soft_delete(models.Model): #model info
         abstract=True
 
 
-
 class Core(Soft_delete):
     created_on=models.DateTimeField()
     created_by=models.IntegerField(default=1)
     updated_by=models.IntegerField(default=1)
     updated_on=models.DateTimeField()
-    plant=models.CharField(max_length=30,null=True)
+    material = models.CharField(max_length=10,null=True) #Référence article	
+    division=models.CharField(max_length=30,null=True)
     program=models.CharField(max_length=30,null=True)
     supplier=models.CharField(max_length=30,null=True)
     part_number=models.FloatField(null=True)
-    create=models.CharField(max_length=30,null=True)
     type_of_alert=models.CharField(max_length=30,null=True)
     requested_date=models.DateTimeField()
     needed_quantity=models.FloatField(null=True)
-    production_comments=models.TextField(null=True)
-    status=models.CharField(max_length=30,null=True)
-    procurement_comments=models.TextField(null=True)
-    closing_date=models.DateTimeField()
+    subject=models.TextField(null=True)
+    status=models.CharField(max_length=30,null=True,default='To do') #Default To do
+    closing_date=models.DateTimeField(null=True)
     duration_of_the_event=models.CharField(max_length=30,null=True)
 
 class CoreHistory(models.Model):
@@ -299,6 +297,7 @@ class CoreHistory(models.Model):
     created_on=models.DateTimeField()
     created_by=models.IntegerField(default=1)
     comment=models.TextField(null=True)
+    action=models.CharField(max_length=30,null=True)
    
 
         

@@ -6,7 +6,7 @@ class Myform(forms.ModelForm):
     class Meta:
         model = Core
         fields = '__all__'
-        exclude =['created_on','created_by','deleted','deleted_by','deleted_on','updated_by','updated_on']
+        exclude =['created_on','created_by','deleted','deleted_by','deleted_on','updated_by','updated_on','status','closing_date']
         widgets = {
             'requested_date': forms.DateInput(format=('%m/%d/%Y'),attrs={'class':'form-control', 'placeholder':'Select a date', 'type':'date'}),
             'closing_date' : forms.DateInput(format=('%m/%d/%Y'),attrs={'class':'form-control', 'placeholder':'Select a date', 'type':'date'}),
@@ -18,7 +18,7 @@ class Form(forms.ModelForm):
      class Meta:
         model = CoreHistory
         fields = '__all__'
-        exclude =['core','created_on','created_by']
+        exclude =['core','created_on','created_by','action']
         
    
         
