@@ -1,9 +1,9 @@
 # Create your views here.
-from __future__ import division
 from io import StringIO
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.db.utils import OperationalError
+from django.contrib import messages
 import pandas as pd
 import psycopg2
 from datetime import datetime
@@ -27,31 +27,31 @@ def upload(request):
 def uploaded_files():
     #connection to DB 
         try:
-            conn= psycopg2.connect(host='localhost', dbname='latecoere_db', user='postgres', password='sahar',port='5432')
-            
+            conn= psycopg2.connect(host='localhost', dbname='latecoere_db', user='postgres', password='sahar',port='5432') 
+            file_mb52=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\MB52.xlsx')
+            file_se16ncepc=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_CEPC.xlsx')
+            file_se16nt001l=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_T001L.xlsx')
+            file_se16nt024=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_T024.xlsx')
+            file_zmm=pathlib.Path( r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\ZMM_CARNET_CDE_IS.xlsx')
+            file_zrp=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\ZRPFLG13.txt')
+            #User name
+            uploded_by = 1
+            #Date time for upload files
+            uploded_at = datetime.now()
+            #control statment to check if files exists    
+            if (file_mb52.exists() and file_se16ncepc.exists() and file_se16nt001l.exists() and file_se16nt024.exists() and file_zmm.exists() and file_zrp.exists() ):
+                import_file_MB52(conn,file_mb52,uploded_by,uploded_at)
+                import_file_SE16N_CEPC(conn,file_se16ncepc,uploded_by,uploded_at)
+                import_file_SE16N_T001L(conn,file_se16nt001l,uploded_by,uploded_at)
+                import_file_SE16N_T024(conn,file_se16nt024,uploded_by,uploded_at)
+                import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,uploded_by,uploded_at)
+                import_file_ZRPFLG13(conn,file_zrp,uploded_by,uploded_at)
+            else:
+                print('files  not found') #To edit as Error MSG
         except OperationalError:
            print('Error Establishing a DB connection')
         #
-        file_mb52=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\MB52.xlsx')
-        file_se16ncepc=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_CEPC.xlsx')
-        file_se16nt001l=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_T001L.xlsx')
-        file_se16nt024=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\SE16N_T024.xlsx')
-        file_zmm=pathlib.Path( r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\ZMM_CARNET_CDE_IS.xlsx')
-        file_zrp=pathlib.Path(r'C:\Users\bibas\OneDrive\Bureau\PFE\inputSAP\ZRPFLG13.txt')
-        #User name
-        uploded_by = 1
-        #Date time for upload files
-        uploded_at = datetime.now()
-        #control statment to check if files exists    
-        if (file_mb52.exists() and file_se16ncepc.exists() and file_se16nt001l.exists() and file_se16nt024.exists() and file_zmm.exists() and file_zrp.exists() ):
-            import_file_MB52(conn,file_mb52,uploded_by,uploded_at)
-            import_file_SE16N_CEPC(conn,file_se16ncepc,uploded_by,uploded_at)
-            import_file_SE16N_T001L(conn,file_se16nt001l,uploded_by,uploded_at)
-            import_file_SE16N_T024(conn,file_se16nt024,uploded_by,uploded_at)
-            import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,uploded_by,uploded_at)
-            import_file_ZRPFLG13(conn,file_zrp,uploded_by,uploded_at)
-        else:
-            print('files  not found') #To edit as Error MSG
+        
    
 #function for import file MB52
 def import_file_MB52(con,file,username,uploaded_at):
@@ -466,7 +466,7 @@ def  import_file_ZRPFLG13(con,file,username,uploaded_at):
 
 #CRUD CORE
 def core(request):#show list of core
-    data=Core.undeleted_objects.all()
+    data=Core.undeleted_objects.all().exclude(status='Close' and 'Refuse').order_by('-id')
     return render(request,r'app\core.html',{'data':data})
 
 def create_core(request):#create new core
@@ -474,10 +474,9 @@ def create_core(request):#create new core
         material=request.POST['material']
         division=request.POST['division']
         data=Core.undeleted_objects.all().filter(material=material,division=division).exclude(status='Close').first()
-
         if data:
-            message={'type':'danger','msg':'Core is already created!'}
-            return render(request,'app/core_history.html',{'pk':data.id,'message':message})
+            messages.warning(request,'Core is already exist !')
+            return render(request,'app/core_history.html',{'pk':data.id})
         else:
             myform = Myform(request.POST)
             if myform.is_valid():
@@ -486,8 +485,7 @@ def create_core(request):#create new core
                 instance.updated_on =datetime.now()
                 instance.created_by='1'
                 instance.save()
-                message={'type':'success','msg':'Core is  created successfully!'}
-
+                messages.success(request,'Core added sucessfully')
                 return redirect('core')
 
     return render(request,'app\create_core.html',{'myform' : Myform})
@@ -499,10 +497,10 @@ def update_core(request,pk): #function for update core
         myform = Myform(request.POST,instance=core)
         if myform.is_valid():
             myform.save()
-            # messages.success(request,"Core updated successfully!")
+            messages.success(request,"Core updated successfully!")
             return redirect('core')
-        # else:
-        #     messages.error(request, 'Invalid form submission.') 
+        else:
+            messages.error(request, 'Invalid form submission.') 
     return render(request,'app/updateForm.html',{'core' : core,'myform' : myform}) 
 
 def delete_core(request,pk): #function soft-delete

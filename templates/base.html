@@ -17,6 +17,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'css/adminlte.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/toastr/toastr.css' %}">
+
 
   <!-- jQuery -->
 <script src="{% static 'plugins/jquery/jquery.min.js'%}"></script>
@@ -279,6 +281,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="content">
         <div class="container-fluid">
           <!-- <div class="row"> -->
+
+            {% include 'app/messages.html'%}
             {% block content %}
 
             {% endblock %}
@@ -321,5 +325,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
 <!-- AdminLTE App -->
 <script src="{% static 'js/adminlte.js'%}"></script>
+<script src="{% static 'plugins/toastr/toastr.min.js'%}"></script>
+
 </body>
 </html>

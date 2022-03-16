@@ -20,9 +20,6 @@
 <div style='margin-bottom:10px'>
 <a href ="{% url 'core' %}" >{% bs_icon 'arrow-left' size='2em'  %}</a>
 </div>
-{%if message%}
-  {%include 'app/message.html'%}
-{%endif%}
 <section class="content">
   <div class="container-fluid">
     {%if     core.status != 'Close' and core.status != 'Refuse' %}
@@ -45,7 +42,7 @@
             <div>
                 <label for="recipient-name" class="col-form-label">Status:</label>
                 <select class="custom-select" id="status" name ="status">
-                    <option value="To do"disabled>To do</option>
+                    <option value="To do" {%if core.status == 'To do'%}disabled selected {%endif%}>To do</option>
                     <option  value="Open" {%if core.status == 'Open'%} selected {%endif%}>Open</option>
                     <option value="Stand by" {%if core.status == 'Stand by'%} selected {%endif%}>Stand by</option>
                     <option value="Refuse"{%if core.status == 'Refuse'%} selected {%endif%}>Refuse</option>
@@ -55,8 +52,8 @@
                 </select>
             </div>
             {{form|crispy}}
-            <div class="d-flex justify-content-center">
-             <input type="submit" class="btn btn-primary" value="save" id ="save">
+            <div class="d-flex justify-content-center" style='margin-bottom:10px'>
+             <input type="submit" class="btn btn-primary" value="Save" id ="save">
             </div>
         </div>
         </form>
