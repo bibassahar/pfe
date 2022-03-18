@@ -481,10 +481,12 @@ def create_core(request):#create new core
     if  (request.method == 'POST') :
         material=request.POST['material']
         division=request.POST['division']
-        data=Core.undeleted_objects.all().filter(material=material,division=division).exclude(status='Close').first()
+        data=Core.undeleted_objects.all().filter(material=material,division=division).exclude(status='Close')
+        print(data.first())
         if data:
             messages.warning(request,'Core is already exist !')
-            return render(request,'app/core_history.html',{'pk':data.id})
+            # return render(request,'app/core_history.html',{'pk':data.first().id,'data':data})
+            return core_history(request,data.first().id)
         else:
             myform = Myform(request.POST)
             if myform.is_valid():
@@ -503,12 +505,21 @@ def update_core(request,pk): #function for update core
     myform=Myform(instance=core)
     if (request.method=='POST'):
         myform = Myform(request.POST,instance=core)
-        if myform.is_valid():
-            myform.save()
-            messages.success(request,"Core updated successfully!")
-            return redirect('core')
+        material=request.POST['material']
+        division=request.POST['division']
+        data=Core.undeleted_objects.all().filter(material=material,division=division).exclude(status='Close')
+        print(data.first())
+        if data:
+            messages.warning(request,'Core is already exist !')
+            # return render(request,'app/core_history.html',{'pk':data.first().id,'data':data})
+            return core_history(request,data.first().id)
         else:
-            messages.error(request, 'Invalid form submission.') 
+            if myform.is_valid():
+                myform.save()
+                messages.success(request,"Core updated successfully!")
+                return redirect('core')
+            else:
+                messages.error(request, 'Invalid form submission.') 
     return render(request,'app/updateForm.html',{'core' : core,'myform' : myform}) 
 
 def delete_core(request,pk): #function soft-delete
@@ -522,20 +533,26 @@ def delete_core(request,pk): #function soft-delete
 def core_history(request,pk):
     data=CoreHistory.objects.all().filter(core_id=pk).order_by('-id')
     core=Core.objects.get(id=pk)
+    return render(request,'app/core_history.html',{'form':Form,'pk':pk,'data':data,'core':core})
+
+
+def save_core_history(request,pk):
+    # data=CoreHistory.objects.all().filter(core_id=pk).order_by('-id')
+    core=Core.objects.get(id=pk)
     if (request.method == 'POST'):
         core.status = request.POST['status']
-        if core.status== 'Close':
-            core.closing_date=datetime.now()
-        core.save()
-        form=Form(request.POST)
-        if form.is_valid():
-            instance=form.save(commit=False)
-            instance.created_on =datetime.now()
-            instance.created_by='1'
-            instance.core_id=pk
-            instance.action=request.POST['status']
-            instance.save()
-            return redirect('core')
-    return render(request,'app/core_history.html',{'form':Form,'pk':pk,'data':data,'core':core})
+    if core.status== 'Close':
+        core.closing_date=datetime.now()
+    core.save()
+    form=Form(request.POST)
+    if form.is_valid():
+        instance=form.save(commit=False)
+        instance.created_on =datetime.now()
+        instance.created_by='1'
+        instance.core_id=pk
+        instance.action=request.POST['status']
+        instance.save()
+    return redirect('core')
+
 
 
