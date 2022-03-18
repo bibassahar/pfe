@@ -1,6 +1,8 @@
+
 .toast-title {
   font-weight: bold;
 }
+
 .toast-message {
   -ms-word-wrap: break-word;
   word-wrap: break-word;
@@ -79,6 +81,7 @@ button.toast-close-button {
 .toast-top-right {
   top: 12px;
   right: 12px;
+  width: 300px;
 }
 .toast-bottom-right {
   right: 12px;

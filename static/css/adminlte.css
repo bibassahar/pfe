@@ -31251,10 +31251,12 @@ html.maximized-card {
   right: 0;
   top: 0;
   z-index: 1040;
+  
 }
 
 .toasts-top-right.fixed {
   position: fixed;
+  size:50px
 }
 
 .toasts-top-left {

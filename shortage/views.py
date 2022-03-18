@@ -9,6 +9,8 @@ import psycopg2
 from datetime import datetime
 import pathlib
 from shortage.forms import Myform,Form
+from django.db.models import Q
+
 
 
 from shortage.models import MB52,SE16N_CEPC,SE16N_T001L,SE16N_T024,ZMM_CARNET_CDE_IS,ZRPFLG13,Core,CoreHistory
@@ -20,11 +22,11 @@ def upload(request):
     # SE16N_T024.objects.all().delete()
     # ZMM_CARNET_CDE_IS.objects.all().delete()
     # ZRPFLG13.objects.all().delete()
-    uploaded_files()  #call function to upload files
+    uploaded_files(request)  #call function to upload files
     return render(request,'app/upload.html')
 
  #Upload Files and check if exist   
-def uploaded_files():
+def uploaded_files(request):
     #connection to DB 
         try:
             conn= psycopg2.connect(host='localhost', dbname='latecoere_db', user='postgres', password='sahar',port='5432') 
@@ -46,11 +48,12 @@ def uploaded_files():
                 import_file_SE16N_T024(conn,file_se16nt024,uploded_by,uploded_at)
                 import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,uploded_by,uploded_at)
                 import_file_ZRPFLG13(conn,file_zrp,uploded_by,uploded_at)
+                messages.error(request, 'Files not found')
+
             else:
-                print('files  not found') #To edit as Error MSG
+               messages.error(request, 'Files not found')
         except OperationalError:
-           print('Error Establishing a DB connection')
-        #
+           messages.error(request,'Data base not found')
         
    
 #function for import file MB52
@@ -465,9 +468,14 @@ def  import_file_ZRPFLG13(con,file,username,uploaded_at):
     con.commit() 
 
 #CRUD CORE
-def core(request):#show list of core
-    data=Core.undeleted_objects.all().exclude(status='Close' and 'Refuse').order_by('-id')
-    return render(request,r'app\core.html',{'data':data})
+def core(request):#show list of core 
+    filter=""
+    if  (request.method == 'POST') :
+        data=Core.objects.all().order_by('-id')
+        filter='all'
+    else:
+        data=Core.undeleted_objects.all().exclude(Q(status='Close') | Q(status='Refuse')).order_by('-id')
+    return render(request,r'app\core.html',{'data':data,'filter':filter})
 
 def create_core(request):#create new core
     if  (request.method == 'POST') :
@@ -529,5 +537,5 @@ def core_history(request,pk):
             instance.save()
             return redirect('core')
     return render(request,'app/core_history.html',{'form':Form,'pk':pk,'data':data,'core':core})
-    
+
 
