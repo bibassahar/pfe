@@ -5,7 +5,6 @@
 {% block content %}
 
 <a href ="{% url 'core' %}" >{% bs_icon 'arrow-left' size='2em'%}</a>
-
 <div class='content'>
         <div class="container-fuild">
                 <div class='row'>
@@ -17,6 +16,7 @@
                                                 <h5>Create New Core </h5>
                                         </div>
                                         <div class='body'>
+                                                
                                                 <form method= "POST" class ="form-group-inline" action="{% url 'create_core' %}">
                                                         <div class="row">
                                                                 <div class ="col-2">
@@ -32,6 +32,8 @@
                                                 </form>
                                                 <div class ="col-2">
                                                 </div>
+                                              
+
                                         </div>
                                 </div>
                         </div>

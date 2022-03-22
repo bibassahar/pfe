@@ -10,8 +10,7 @@ from datetime import datetime
 import pathlib
 from shortage.forms import Myform,Form
 from django.db.models import Q
-
-
+from .decorators import allowed_users
 
 from shortage.models import MB52,SE16N_CEPC,SE16N_T001L,SE16N_T024,ZMM_CARNET_CDE_IS,ZRPFLG13,Core,CoreHistory
 #function to upload files
@@ -48,7 +47,6 @@ def uploaded_files(request):
                 import_file_SE16N_T024(conn,file_se16nt024,uploded_by,uploded_at)
                 import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,uploded_by,uploded_at)
                 import_file_ZRPFLG13(conn,file_zrp,uploded_by,uploded_at)
-                messages.error(request, 'Files not found')
 
             else:
                messages.error(request, 'Files not found')
@@ -477,6 +475,7 @@ def core(request):#show list of core
         data=Core.undeleted_objects.all().exclude(Q(status='Close') | Q(status='Refuse')).order_by('-id')
     return render(request,r'app\core.html',{'data':data,'filter':filter})
 
+@allowed_users(allowed_roles=['User','admin'])
 def create_core(request):#create new core
     if  (request.method == 'POST') :
         material=request.POST['material']
@@ -500,6 +499,7 @@ def create_core(request):#create new core
 
     return render(request,'app\create_core.html',{'myform' : Myform})
 
+@allowed_users(allowed_roles=['admin'])
 def update_core(request,pk): #function for update core
     core=Core.objects.get(id=pk)
     myform=Myform(instance=core)
@@ -520,8 +520,9 @@ def update_core(request,pk): #function for update core
                 return redirect('core')
             else:
                 messages.error(request, 'Invalid form submission.') 
-    return render(request,'app/updateForm.html',{'core' : core,'myform' : myform}) 
+    return render(request,'app/updateForm.html',{'core' : core,'myform' : myform})
 
+@allowed_users(allowed_roles=['admin'])
 def delete_core(request,pk): #function soft-delete
     core=Core.objects.get(id=pk)
     core.deleted=True
