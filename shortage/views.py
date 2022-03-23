@@ -475,7 +475,7 @@ def core(request):#show list of core
         data=Core.undeleted_objects.all().exclude(Q(status='Close') | Q(status='Refuse')).order_by('-id')
     return render(request,r'app\core.html',{'data':data,'filter':filter})
 
-@allowed_users(allowed_roles=['user','administrator'])
+@allowed_users(allowed_roles=['users','administrators'])
 def create_core(request):#create new core
     if  (request.method == 'POST') :
         material=request.POST['material']
@@ -499,7 +499,7 @@ def create_core(request):#create new core
 
     return render(request,'app\create_core.html',{'myform' : Myform})
 
-@allowed_users(allowed_roles=['administrator'])
+@allowed_users(allowed_roles=['administrators'])
 def update_core(request,pk): #function for update core
     core=Core.objects.get(id=pk)
     myform=Myform(instance=core)
@@ -522,7 +522,7 @@ def update_core(request,pk): #function for update core
                 messages.error(request, 'Invalid form submission.') 
     return render(request,'app/updateForm.html',{'core' : core,'myform' : myform})
 
-@allowed_users(allowed_roles=['administrator'])
+@allowed_users(allowed_roles=['administrators'])
 def delete_core(request,pk): #function soft-delete
     core=Core.objects.get(id=pk)
     core.deleted=True
